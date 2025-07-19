@@ -1,20 +1,20 @@
 <template>
-  <div :class="{ 'dark-mode': isDarkMode }" class="main-container">
-    <div class="container mt-5">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="text-center">Todo App</h1>
-        <button class="btn btn-outline-secondary" @click="toggleDarkMode">
+  <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300">
+    <div class="container mx-auto mt-5">
+      <div class="flex justify-between items-center mb-3">
+        <h1 class="text-center text-2xl font-bold">Todo App</h1>
+        <button class="p-2 border rounded" @click="toggleDarkMode">
           <i :class="isDarkMode ? 'bi bi-sun' : 'bi bi-moon'"></i>
         </button>
       </div>
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
-        <button class="btn btn-primary" @click="addTodo">Add</button>
+      <div class="flex mb-3">
+        <input type="text" class="flex-grow p-2 border rounded-l-md text-gray-800 dark:text-white bg-white dark:bg-gray-700" v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
+        <button class="p-2 bg-blue-500 text-white rounded-r-md" @click="addTodo">Add</button>
       </div>
-      <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(todo, index) in todos" :key="index">
+      <ul class="space-y-2">
+        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white" v-for="(todo, index) in todos" :key="index">
           {{ todo }}
-          <button class="btn btn-danger btn-sm" @click="deleteTodo(index)">Delete</button>
+          <button class="p-1 bg-red-500 text-white rounded-md" @click="deleteTodo(index)">Delete</button>
         </li>
       </ul>
     </div>
@@ -44,8 +44,7 @@ export default {
     },
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
-      document.body.classList.toggle('bg-dark', this.isDarkMode);
-      document.body.classList.toggle('bg-light', !this.isDarkMode);
+      document.documentElement.classList.toggle('dark', this.isDarkMode);
     },
     saveTodos() {
       localStorage.setItem('todos', JSON.stringify(this.todos)); // Save todos to localStorage
@@ -59,35 +58,5 @@ export default {
 </script>
 
 <style>
-.main-container {
-  min-height: 100vh;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.dark-mode {
-  background-color: #212529;
-  color: #f8f9fa;
-}
-
-.dark-mode .list-group-item {
-  background-color: #343a40;
-  border-color: #495057;
-  color: #f8f9fa;
-}
-
-.dark-mode .form-control {
-  background-color: #343a40;
-  border-color: #495057;
-  color: #f8f9fa;
-}
-
-.dark-mode .form-control::placeholder {
-  color: #adb5bd;
-}
-
-.dark-mode .btn-outline-secondary {
-    color: #f8f9fa;
-    border-color: #f8f9fa;
-}
-
+/* Tailwind's dark mode styles will handle the theme. */
 </style>
