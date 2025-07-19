@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       newTodo: '',
-      todos: [],
-      isDarkMode: false
+      todos: JSON.parse(localStorage.getItem('todos')) || [], // Load todos from localStorage
+      isDarkMode: true
     }
   },
   methods: {
@@ -35,16 +35,25 @@ export default {
       if (this.newTodo.trim() !== '') {
         this.todos.push(this.newTodo.trim());
         this.newTodo = '';
+        this.saveTodos();
       }
     },
     deleteTodo(index) {
       this.todos.splice(index, 1);
+      this.saveTodos();
     },
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
       document.body.classList.toggle('bg-dark', this.isDarkMode);
       document.body.classList.toggle('bg-light', !this.isDarkMode);
+    },
+    saveTodos() {
+      localStorage.setItem('todos', JSON.stringify(this.todos)); // Save todos to localStorage
     }
+  },
+  mounted() {
+    // Ensure todos are loaded from localStorage on app initialization
+    this.todos = JSON.parse(localStorage.getItem('todos')) || [];
   }
 }
 </script>
