@@ -1,0 +1,9 @@
+# This file specifies files that are *not* uploaded to Google Cloud when
+# you run gcloud commands. It works like a .gitignore file.
+
+# All files are ignored by default.
+*.*
+
+# Un-ignore the dist directory and the app.yaml file.
+!dist/
+!app.yaml
