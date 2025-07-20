@@ -1,9 +1,11 @@
 <template>
   <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
     <div class="container mx-auto mt-5 p-1">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-3">
         <h1 class="text-center text-2xl font-bold">Todo</h1>
       </div>
+      <!-- Add new todo -->
       <div class="flex mb-3">
         <button class="std p-2 bg-blue-500 text-white rounded-l-md flex items-center justify-center" @click="addTodo()">
           <i class="fas fa-plus"></i>
@@ -11,6 +13,7 @@
         <input type="text" class="flex-grow p-2 border rounded-r-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
           v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
       </div>
+      <!-- List of Todos -->
       <ul class="space-y-2">
         <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
           v-for="(todo, index) in todos" :key="index">
@@ -18,8 +21,11 @@
             <button class="std p-2  text-white rounded-l-md" @click="deleteTodo(index)">
               <i class="fas fa-circle"></i>
             </button>
+            <!-- List item -->
             <span v-if="!todo.isEditing" class="p-2" @dblclick="editTodo(index)">{{ todo.text }}</span>
-            <input v-else type="text" class="p-2 border rounded-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
+            <!-- List Edit -->
+            <input v-else type="text"
+              class="p-2 border rounded-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
               v-model="todo.text" @blur="saveEdit(index)" @keyup.enter="saveEdit(index)">
           </div>
         </li>
