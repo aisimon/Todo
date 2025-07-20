@@ -4,9 +4,17 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-3 relative">
                 <h1 class="text-center text-2xl font-bold">Todo</h1>
-                <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="copyToClipboard">
-                    <i class="fas fa-clipboard"></i>
-                </button>
+                <div class="flex space-x-2">
+                    <!-- Dark Mode Toggle -->
+                    <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="toggleDarkMode">
+                        <span v-if="isDarkMode" class="material-icons">light_mode</span>
+                        <span v-else class="material-icons">dark_mode</span>
+                    </button>
+                    <!-- Copy to Clipboard -->
+                    <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="copyToClipboard">
+                        <i class="fas fa-clipboard"></i>
+                    </button>
+                </div>
                 <!-- Tooltip -->
                 <div v-if="showTooltip" class="absolute top-0 right-0 mt-10 mr-2 p-2 bg-gray-700 text-white text-sm rounded shadow-lg transition-opacity duration-500 z-50">
                     {{ 'Copied' }}
@@ -51,10 +59,16 @@ export default {
         return {
             newTodo: '',
             todos: JSON.parse(localStorage.getItem('todos')) || [],
-            showTooltip: false // Control tooltip visibility
+            showTooltip: false, // Control tooltip visibility
+            isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false // Track dark mode state
         }
     },
     methods: {
+        toggleDarkMode() {
+            this.isDarkMode = !this.isDarkMode;
+            localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode)); // Save dark mode state
+            document.documentElement.classList.toggle('dark', this.isDarkMode); // Toggle dark mode class on <html>
+        },
         addTodo() {
             if (this.newTodo.trim() !== '') {
                 this.todos.push({ text: this.newTodo.trim(), isEditing: false, isDeleting: false });
@@ -134,6 +148,8 @@ export default {
     },
     mounted() {
         this.todos = JSON.parse(localStorage.getItem('todos')) || [];
+        this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
+        document.documentElement.classList.toggle('dark', this.isDarkMode); // Apply dark mode on mount
     }
 }
 </script>
