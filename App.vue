@@ -4,15 +4,18 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-3 relative">
                 <h1 class="text-center text-2xl font-bold">Todo</h1>
-                <div class="flex space-x-2">
+                <div class="flex space-x-9">
                     <!-- Dark Mode Toggle -->
-                    <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="toggleDarkMode">
+                    <button class="std p-2 text-white bg-gray-500 rounded-md flex items-center justify-center" @click="toggleDarkMode">
                         <span v-if="isDarkMode" class="material-icons">light_mode</span>
                         <span v-else class="material-icons">dark_mode</span>
                     </button>
                     <!-- Copy to Clipboard -->
-                    <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="copyToClipboard">
+                    <button class="std p-2 text-white bg-gray-500 rounded-md flex items-center justify-center" @click="copyToClipboard">
                         <i class="fas fa-clipboard"></i>
+                    </button>
+                    <button class="std p-2 text-white bg-gray-500 rounded-md flex items-center justify-center" @click="addRandomTodo">
+                        <i class="fas fa-bomb"></i>
                     </button>
                 </div>
                 <!-- Tooltip -->
@@ -144,7 +147,25 @@ export default {
                 }
                 document.body.removeChild(textarea);
             }
-        }
+        },
+        addRandomTodo() {
+            const randomTodos = [
+                "Buy groceries",
+                "Walk the dog",
+                "Read a book",
+                "Write some code",
+                "Clean the house",
+                "Call a friend",
+                "Plan a trip",
+                "Watch a movie",
+                "Exercise for 30 minutes",
+                "Learn a new skill"
+            ];
+            const randomIndex = Math.floor(Math.random() * randomTodos.length);
+            const randomTodo = randomTodos[randomIndex];
+            this.todos.push({ text: randomTodo, isEditing: false, isDeleting: false });
+            this.saveTodos(); // Save the updated todos to localStorage
+        },
     },
     mounted() {
         this.todos = JSON.parse(localStorage.getItem('todos')) || [];
