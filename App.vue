@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import confetti from 'canvas-confetti';
+
 export default {
     data() {
         return {
@@ -57,10 +59,18 @@ export default {
         },
         deleteTodoWithAnimation(index) {
             this.todos[index].isDeleting = true; // Trigger the animation
+            this.triggerConfetti(); // Trigger confetti effect
             setTimeout(() => {
                 this.todos.splice(index, 1); // Remove the item after the animation
                 this.saveTodos();
             }, 400); // Match the animation duration
+        },
+        triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 } // Adjust the origin to appear near the middle of the screen
+            });
         },
         editTodo(index) {
             this.todos[index].isEditing = true;
