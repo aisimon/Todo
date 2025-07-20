@@ -94,4 +94,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 - [Vue.js](https://vuejs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti)
+- [Canvas Confetti](https://confetti.js.org/more.html)
+- [Font Awesome](https://fontawesome.com/) for icons

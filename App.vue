@@ -82,11 +82,16 @@ export default {
         },
         deleteTodoWithAnimation(index, event) {
             this.todos[index].isDeleting = true; // Trigger the animation
-            this.triggerConfetti(); // Trigger confetti effect at the calculated position
             setTimeout(() => {
                 this.todos.splice(index, 1); // Remove the item after the animation
                 this.saveTodos();
-            }, 400); // Match the animation duration
+
+                if (this.todos.length === 0) {
+                    this.triggerAllClearedAnimation();
+                    return;
+                }
+                this.triggerConfetti(); // Trigger regular confetti
+            }, 400);
         },
         triggerConfetti() {
             const todoList = this.$el.querySelector('ul'); // Get the todo list element
@@ -99,10 +104,41 @@ export default {
                 spread: randomInRange(50, 70),
                 particleCount: randomInRange(50, 100),
                 origin: {
-                    x: (rect.right - 10) / width, // Start near the lower-right corner of the last item
-                    y: (rect.bottom + 60) / height // 60 pixels below the last item
+                    x: (rect.right - 60) / width,
+                    y: (rect.bottom + 30) / height
                 }
             });
+        },
+        triggerAllClearedAnimation() {
+            const defaults = {
+                spread: 360,
+                ticks: 50,
+                gravity: 0,
+                decay: 0.94,
+                startVelocity: 30,
+                shapes: ["star"],
+                colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+            };
+
+            const shooter = {
+                shoot() {
+                    confetti({
+                        ...defaults,
+                        particleCount: 40,
+                        scalar: 1.2,
+                        shapes: ["star"],
+                    });
+                    confetti({
+                        ...defaults,
+                        particleCount: 10,
+                        scalar: 0.75,
+                        shapes: ["circle"],
+                    });
+                }
+            }
+            setTimeout(() => shooter.shoot(), 0);
+            setTimeout(() => shooter.shoot(), 100);
+            setTimeout(() => shooter.shoot(), 200);
         },
         editTodo(index) {
             this.todos[index].isEditing = true;
