@@ -2,14 +2,17 @@ runtime: nodejs20
 service: default
 
 handlers:
-- url: /
-  static_files: dist/index.html
-  upload: dist/index.html
+  # Serve static assets (JS, CSS, images, etc.)
+  - url: /assets/(.*)
+    static_files: dist/assets/\1
+    upload: dist/assets/.*
 
-- url: /assets/(.*)
-  static_files: dist/assets/\1
-  upload: dist/assets/(.*)
+  # Serve index.html for the root path
+  - url: /
+    static_files: dist/index.html
+    upload: dist/index.html
 
-- url: /(.*)
-  static_files: dist/index.html
-  upload: dist/index.html
+  # Catch all other routes and serve index.html to handle client-side routing
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
