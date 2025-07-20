@@ -9,13 +9,15 @@
         </button>
       </div>
       <div class="flex mb-3">
-        <input type="text" class="flex-grow p-2 border rounded-l-md text-gray-800 dark:text-white bg-white dark:bg-gray-700" v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
-        <button class="p-2 bg-blue-500 text-white rounded-r-md" @click="addTodo">Add</button>
+        <input type="text" class="flex-grow p-2 border rounded-l-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
+          v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
+        <button class="p-2 bg-blue-500 text-white rounded-r-md" @click="addTodo()">Add</button>
       </div>
       <ul class="space-y-2">
-        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white" v-for="(todo, index) in todos" :key="index">
+        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
+          v-for="(todo, index) in todos" :key="index">
           {{ todo }}
-          <button class="p-1 bg-red-500 text-white rounded-md" @click="deleteTodo(index)">Delete</button>
+          <button class="p-2 bg-red-600 text-white rounded-md" @click="deleteTodo(index)"> Del </button>
         </li>
       </ul>
     </div>
