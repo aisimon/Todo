@@ -2,11 +2,15 @@
     <div class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
         <div class="container mx-auto mt-5 p-1">
             <!-- Header -->
-            <div class="flex justify-between items-center mb-3">
+            <div class="flex justify-between items-center mb-3 relative">
                 <h1 class="text-center text-2xl font-bold">Todo</h1>
                 <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="copyToClipboard">
                     <i class="fas fa-clipboard"></i>
                 </button>
+                <!-- Tooltip -->
+                <div v-if="showTooltip" class="absolute top-0 right-0 mt-10 mr-2 p-2 bg-gray-700 text-white text-sm rounded shadow-lg transition-opacity duration-500">
+                    {{ COPIED_TOOLTIP_TEXT }}
+                </div>
             </div>
             <!-- Add new todo -->
             <div class="flex mb-3">
@@ -41,12 +45,14 @@
 
 <script>
 import confetti from 'canvas-confetti';
+import { TOOLTIP_TIMEOUT, COPIED_TOOLTIP_TEXT } from './constants';
 
 export default {
     data() {
         return {
             newTodo: '',
             todos: JSON.parse(localStorage.getItem('todos')) || [], // Load todos from localStorage
+            showTooltip: false // Control tooltip visibility
         }
     },
     methods: {
@@ -87,7 +93,10 @@ export default {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(markdownList)
                     .then(() => {
-                        alert('Todo list copied to clipboard in Markdown format!');
+                        this.showTooltip = true; // Show tooltip
+                        setTimeout(() => {
+                            this.showTooltip = false; // Hide tooltip after timeout
+                        }, TOOLTIP_TIMEOUT);
                     })
                     .catch(err => {
                         console.error('Failed to copy text: ', err);
@@ -104,7 +113,10 @@ export default {
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    alert('Todo list copied to clipboard in Markdown format!');
+                    this.showTooltip = true; // Show tooltip
+                    setTimeout(() => {
+                        this.showTooltip = false; // Hide tooltip after timeout
+                    }, TOOLTIP_TIMEOUT);
                 } catch (err) {
                     console.error('Fallback: Failed to copy text: ', err);
                     alert('Failed to copy to clipboard. Please try again.');
