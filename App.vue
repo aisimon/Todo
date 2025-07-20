@@ -17,7 +17,7 @@
         <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
           v-for="(todo, index) in todos" :key="index">
           <span class="p-2">{{ todo }}</span>
-          <button class="std p-2 bg-red-600 text-white rounded-md" @click="deleteTodo(index)"> Del </button>
+          <button class="std p-2 bg-red-600 text-white rounded-md" @click="deleteTodo(index)"> Done </button>
         </li>
       </ul>
     </div>
