@@ -15,14 +15,7 @@ Before you begin, ensure you have the following installed on your system:
 
 Follow these steps to set up and run the project locally:
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-repo/todo-app.git
-cd todo-app
-```
-
-### 2. Install Dependencies
+### 1. Install Dependencies
 
 Run the following command to install the required dependencies:
 
@@ -30,7 +23,7 @@ Run the following command to install the required dependencies:
 npm install
 ```
 
-### 3. Run the Development Server
+### 2. Run the Development Server
 
 Start the development server with:
 
@@ -40,7 +33,7 @@ npm run dev
 
 This will start a local development server. Open your browser and navigate to the URL provided in the terminal (e.g., `http://localhost:3000`).
 
-### 4. Build Tailwind CSS (Optional)
+### 3. Build Tailwind CSS (Optional)
 
 If you make changes to the Tailwind CSS configuration or styles, you can rebuild the CSS file with:
 
@@ -48,7 +41,7 @@ If you make changes to the Tailwind CSS configuration or styles, you can rebuild
 npm run build:css
 ```
 
-### 5. Build for Production
+### 4. Build for Production
 
 To create an optimized production build, run:
 
@@ -58,7 +51,7 @@ npm run build
 
 The build output will be available in the `dist/` directory.
 
-### 6. Preview the Production Build (Optional)
+### 5. Preview the Production Build (Optional)
 
 To preview the production build locally, run:
 
