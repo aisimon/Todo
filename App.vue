@@ -15,11 +15,12 @@
       </div>
       <!-- List of Todos -->
       <ul class="space-y-2">
-        <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
-          v-for="(todo, index) in todos" :key="index">
+        <li v-for="(todo, index) in todos" :key="index"
+          :class="{'line-through opacity-50 transition-all duration-500': todo.isDeleting}"
+          class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white">
           <div class="flex items-center">
             <!-- Checked icon -->
-            <button class="std p-2  text-white rounded-l-md" @click="deleteTodo(index)">
+            <button class="std p-2 text-white rounded-l-md" @click="deleteTodoWithAnimation(index)">
               <i class="fas fa-circle"></i>
             </button>
             <!-- List item -->
@@ -46,14 +47,17 @@ export default {
   methods: {
     addTodo() {
       if (this.newTodo.trim() !== '') {
-        this.todos.push({ text: this.newTodo.trim(), isEditing: false });
+        this.todos.push({ text: this.newTodo.trim(), isEditing: false, isDeleting: false });
         this.newTodo = '';
         this.saveTodos();
       }
     },
-    deleteTodo(index) {
-      this.todos.splice(index, 1);
-      this.saveTodos();
+    deleteTodoWithAnimation(index) {
+      this.todos[index].isDeleting = true; // Trigger the animation
+      setTimeout(() => {
+        this.todos.splice(index, 1); // Remove the item after the animation
+        this.saveTodos();
+      }, 500); // Match the animation duration
     },
     editTodo(index) {
       this.todos[index].isEditing = true;
@@ -79,5 +83,13 @@ export default {
 button.std {
   width: 60px;
   height: rem(3.5); /* Adjust height to match button size */
+}
+
+.line-through {
+  text-decoration: line-through;
+}
+
+.opacity-50 {
+  opacity: 0.5;
 }
 </style>
