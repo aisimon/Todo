@@ -1,8 +1,8 @@
 <template>
   <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
-    <div class="container mx-auto mt-5">
+    <div class="container mx-auto mt-5 p-1">
       <div class="flex justify-between items-center mb-3">
-        <h1 class="text-center text-2xl font-bold">Todo App</h1>
+        <h1 class="text-center text-2xl font-bold">Simon Todo</h1>
         <button class="p-2 border rounded" @click="toggleDarkMode">
           <span v-if="isDarkMode" class="material-icons">light_mode</span>
           <span v-else class="material-icons">dark_mode</span>
@@ -11,13 +11,13 @@
       <div class="flex mb-3">
         <input type="text" class="flex-grow p-2 border rounded-l-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
           v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new todo">
-        <button class="p-2 bg-blue-500 text-white rounded-r-md" @click="addTodo()">Add</button>
+        <button class="std p-2 bg-blue-500 text-white rounded-r-md" @click="addTodo()">Add</button>
       </div>
       <ul class="space-y-2">
-        <li class="flex justify-between items-center p-2 bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
+        <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
           v-for="(todo, index) in todos" :key="index">
-          {{ todo }}
-          <button class="p-2 bg-red-600 text-white rounded-md" @click="deleteTodo(index)"> Del </button>
+          <span class="p-2">{{ todo }}</span>
+          <button class="std p-2 bg-red-600 text-white rounded-md" @click="deleteTodo(index)"> Del </button>
         </li>
       </ul>
     </div>
@@ -66,4 +66,9 @@ export default {
 <style>
 /* Tailwind's dark mode styles are now fully handled by the `dark:` prefix. */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+button.std {
+  width: 65px;
+  height: rem(3.5); /* Adjust height to match button size */
+}
 </style>
