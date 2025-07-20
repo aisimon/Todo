@@ -18,6 +18,7 @@
         <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
           v-for="(todo, index) in todos" :key="index">
           <div class="flex items-center">
+            <!-- Checked icon -->
             <button class="std p-2  text-white rounded-l-md" @click="deleteTodo(index)">
               <i class="fas fa-circle"></i>
             </button>
@@ -72,7 +73,6 @@ export default {
 </script>
 
 <style>
-/* Tailwind's dark mode styles are now fully handled by the `dark:` prefix. */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
 
