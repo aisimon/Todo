@@ -2,6 +2,8 @@
 
 A simple Todo application built with Vue.js and Tailwind CSS.
 
+![alt text](doc/screenshot1.png)
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your system:
