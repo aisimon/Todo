@@ -57,6 +57,10 @@
 <script>
 import confetti from 'canvas-confetti';
 
+function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 export default {
     data() {
         return {
@@ -94,8 +98,9 @@ export default {
             const { innerWidth: width, innerHeight: height } = window; // Get window dimensions
 
             confetti({
-                particleCount: 100,
-                spread: 70,
+                angle: randomInRange(55, 125),
+                spread: randomInRange(50, 70),
+                particleCount: randomInRange(50, 100),
                 origin: {
                     x: (rect.right - 10) / width, // Start near the lower-right corner of the last item
                     y: (rect.bottom + 60) / height // 60 pixels below the last item
