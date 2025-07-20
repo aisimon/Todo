@@ -2,11 +2,7 @@
   <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
     <div class="container mx-auto mt-5 p-1">
       <div class="flex justify-between items-center mb-3">
-        <h1 class="text-center text-2xl font-bold">Simon Todo</h1>
-        <button class="p-2 border rounded" @click="toggleDarkMode">
-          <span v-if="isDarkMode" class="material-icons">light_mode</span>
-          <span v-else class="material-icons">dark_mode</span>
-        </button>
+        <h1 class="text-center text-2xl font-bold">Todo</h1>
       </div>
       <div class="flex mb-3">
         <button class="std p-2 bg-blue-500 text-white rounded-l-md flex items-center justify-center" @click="addTodo()">
@@ -19,10 +15,12 @@
         <li class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white"
           v-for="(todo, index) in todos" :key="index">
           <div class="flex items-center">
-            <button class="std p-2 bg-red-600 text-white rounded-l-md" @click="deleteTodo(index)">
+            <button class="std p-2  text-white rounded-l-md" @click="deleteTodo(index)">
               <i class="fas fa-circle"></i>
             </button>
-            <span class="p-2">{{ todo }}</span>
+            <span v-if="!todo.isEditing" class="p-2" @dblclick="editTodo(index)">{{ todo.text }}</span>
+            <input v-else type="text" class="p-2 border rounded-md text-gray-800 dark:text-white bg-white dark:bg-gray-700"
+              v-model="todo.text" @blur="saveEdit(index)" @keyup.enter="saveEdit(index)">
           </div>
         </li>
       </ul>
@@ -36,13 +34,12 @@ export default {
     return {
       newTodo: '',
       todos: JSON.parse(localStorage.getItem('todos')) || [], // Load todos from localStorage
-      isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false // Load dark mode state
     }
   },
   methods: {
     addTodo() {
       if (this.newTodo.trim() !== '') {
-        this.todos.push(this.newTodo.trim());
+        this.todos.push({ text: this.newTodo.trim(), isEditing: false });
         this.newTodo = '';
         this.saveTodos();
       }
@@ -51,20 +48,19 @@ export default {
       this.todos.splice(index, 1);
       this.saveTodos();
     },
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
-      localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode)); // Save dark mode state
-      document.documentElement.classList.toggle('dark', this.isDarkMode);
+    editTodo(index) {
+      this.todos[index].isEditing = true;
+    },
+    saveEdit(index) {
+      this.todos[index].isEditing = false;
+      this.saveTodos();
     },
     saveTodos() {
       localStorage.setItem('todos', JSON.stringify(this.todos)); // Save todos to localStorage
     }
   },
   mounted() {
-    // Ensure todos and dark mode state are loaded from localStorage on app initialization
     this.todos = JSON.parse(localStorage.getItem('todos')) || [];
-    this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
-    document.documentElement.classList.toggle('dark', this.isDarkMode);
   }
 }
 </script>
