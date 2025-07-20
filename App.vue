@@ -56,10 +56,7 @@
 
 <script>
 import confetti from 'canvas-confetti';
-
-function randomInRange(min, max) {
-    return Math.random() * (max - min) + min;
-}
+import { randomInRange } from './utils';
 
 export default {
     data() {
