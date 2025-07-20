@@ -126,7 +126,6 @@ export default {
                     })
                     .catch(err => {
                         console.error('Failed to copy text: ', err);
-                        alert('Failed to copy to clipboard. Please try again.');
                     });
             } else {
                 // Fallback for unsupported browsers
@@ -142,10 +141,9 @@ export default {
                     this.showTooltip = true; // Show tooltip
                     setTimeout(() => {
                         this.showTooltip = false; // Hide tooltip after timeout
-                    }, TOOLTIP_TIMEOUT);
+                    }, 3000);
                 } catch (err) {
                     console.error('Fallback: Failed to copy text: ', err);
-                    alert('Failed to copy to clipboard. Please try again.');
                 }
                 document.body.removeChild(textarea);
             }
