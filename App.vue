@@ -27,7 +27,7 @@
                     class="flex justify-between items-center bg-gray-100 rounded-md dark:bg-gray-700 dark:text-white">
                     <div class="flex items-center">
                         <!-- Checked icon -->
-                        <button class="std p-2 text-white rounded-l-md" @click="deleteTodoWithAnimation(index)">
+                        <button class="std p-2 text-white rounded-l-md" @click="deleteTodoWithAnimation(index, $event)">
                             <i class="fas fa-circle"></i>
                         </button>
                         <!-- List item -->
@@ -63,19 +63,25 @@ export default {
                 this.saveTodos();
             }
         },
-        deleteTodoWithAnimation(index) {
+        deleteTodoWithAnimation(index, event) {
             this.todos[index].isDeleting = true; // Trigger the animation
-            this.triggerConfetti(); // Trigger confetti effect
+            this.triggerConfetti(event); // Trigger confetti effect at mouse location
             setTimeout(() => {
                 this.todos.splice(index, 1); // Remove the item after the animation
                 this.saveTodos();
             }, 400); // Match the animation duration
         },
-        triggerConfetti() {
+        triggerConfetti(event) {
+            const { clientX: x, clientY: y } = event; // Get mouse click coordinates
+            const { innerWidth: width, innerHeight: height } = window; // Get window dimensions
+
             confetti({
                 particleCount: 100,
                 spread: 70,
-                origin: { y: 0.6 } // Adjust the origin to appear near the middle of the screen
+                origin: {
+                    x: x / width, // Normalize x-coordinate
+                    y: y / height // Normalize y-coordinate
+                }
             });
         },
         editTodo(index) {
