@@ -8,8 +8,8 @@
                     <i class="fas fa-clipboard"></i>
                 </button>
                 <!-- Tooltip -->
-                <div v-if="showTooltip" class="absolute top-0 right-0 mt-10 mr-2 p-2 bg-gray-700 text-white text-sm rounded shadow-lg transition-opacity duration-500">
-                    {{ COPIED_TOOLTIP_TEXT }}
+                <div v-if="showTooltip" class="absolute top-0 right-0 mt-10 mr-2 p-2 bg-gray-700 text-white text-sm rounded shadow-lg transition-opacity duration-500 z-50">
+                    {{ 'Copied' }}
                 </div>
             </div>
             <!-- Add new todo -->
@@ -45,7 +45,6 @@
 
 <script>
 import confetti from 'canvas-confetti';
-import { TOOLTIP_TIMEOUT, COPIED_TOOLTIP_TEXT } from './constants';
 
 export default {
     data() {
@@ -104,7 +103,7 @@ export default {
                         this.showTooltip = true; // Show tooltip
                         setTimeout(() => {
                             this.showTooltip = false; // Hide tooltip after timeout
-                        }, TOOLTIP_TIMEOUT);
+                        }, 3000);
                     })
                     .catch(err => {
                         console.error('Failed to copy text: ', err);
@@ -154,5 +153,9 @@ export default {
 
     .opacity-50 {
         opacity: 0.5;
+    }
+
+    .z-50 {
+        z-index: 50; /* Ensure tooltip is above other elements */
     }
 </style>
