@@ -65,22 +65,24 @@ export default {
         },
         deleteTodoWithAnimation(index, event) {
             this.todos[index].isDeleting = true; // Trigger the animation
-            this.triggerConfetti(event); // Trigger confetti effect at mouse location
+            this.triggerConfetti(); // Trigger confetti effect at the calculated position
             setTimeout(() => {
                 this.todos.splice(index, 1); // Remove the item after the animation
                 this.saveTodos();
             }, 400); // Match the animation duration
         },
-        triggerConfetti(event) {
-            const { clientX: x, clientY: y } = event; // Get mouse click coordinates
+        triggerConfetti() {
+            const todoList = this.$el.querySelector('ul'); // Get the todo list element
+            const lastTodo = todoList.lastElementChild; // Get the last todo item
+            const rect = lastTodo.getBoundingClientRect(); // Get the position of the last todo item
             const { innerWidth: width, innerHeight: height } = window; // Get window dimensions
 
             confetti({
                 particleCount: 100,
                 spread: 70,
                 origin: {
-                    x: x / width, // Normalize x-coordinate
-                    y: y / height // Normalize y-coordinate
+                    x: (rect.right - 10) / width, // Start near the lower-right corner of the last item
+                    y: (rect.bottom + 60) / height // 60 pixels below the last item
                 }
             });
         },
