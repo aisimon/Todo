@@ -1,9 +1,12 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
+  <div class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
     <div class="container mx-auto mt-5 p-1">
       <!-- Header -->
       <div class="flex justify-between items-center mb-3">
         <h1 class="text-center text-2xl font-bold">Todo</h1>
+        <button class="p-2 text-white bg-gray-600 rounded-md flex items-center justify-center" @click="copyToClipboard">
+          <i class="fas fa-clipboard"></i>
+        </button>
       </div>
       <!-- Add new todo -->
       <div class="flex mb-3">
@@ -68,6 +71,36 @@ export default {
     },
     saveTodos() {
       localStorage.setItem('todos', JSON.stringify(this.todos)); // Save todos to localStorage
+    },
+    copyToClipboard() {
+      const markdownList = this.todos.map(todo => `- ${todo.text}`).join('\n');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(markdownList)
+          .then(() => {
+            alert('Todo list copied to clipboard in Markdown format!');
+          })
+          .catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy to clipboard. Please try again.');
+          });
+      } else {
+        // Fallback for unsupported browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = markdownList;
+        textarea.style.position = 'fixed'; // Prevent scrolling to bottom
+        textarea.style.opacity = '0'; // Hide the textarea
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          alert('Todo list copied to clipboard in Markdown format!');
+        } catch (err) {
+          console.error('Fallback: Failed to copy text: ', err);
+          alert('Failed to copy to clipboard. Please try again.');
+        }
+        document.body.removeChild(textarea);
+      }
     }
   },
   mounted() {
@@ -77,19 +110,19 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
+  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
 
-button.std {
-  width: 60px;
-  height: rem(3.5); /* Adjust height to match button size */
-}
+  button.std {
+    width: 60px;
+    height: rem(3.5); /* Adjust height to match button size */
+  }
 
-.line-through {
-  text-decoration: line-through;
-}
+  .line-through {
+    text-decoration: line-through;
+  }
 
-.opacity-50 {
-  opacity: 0.5;
-}
+  .opacity-50 {
+    opacity: 0.5;
+  }
 </style>
