@@ -1,10 +1,11 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300">
+  <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-800 dark:text-white">
     <div class="container mx-auto mt-5">
       <div class="flex justify-between items-center mb-3">
         <h1 class="text-center text-2xl font-bold">Todo App</h1>
         <button class="p-2 border rounded" @click="toggleDarkMode">
-          <i :class="isDarkMode ? 'bi bi-sun' : 'bi bi-moon'"></i>
+          <span v-if="isDarkMode" class="material-icons">light_mode</span>
+          <span v-else class="material-icons">dark_mode</span>
         </button>
       </div>
       <div class="flex mb-3">
@@ -27,7 +28,7 @@ export default {
     return {
       newTodo: '',
       todos: JSON.parse(localStorage.getItem('todos')) || [], // Load todos from localStorage
-      isDarkMode: true
+      isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false // Load dark mode state
     }
   },
   methods: {
@@ -44,6 +45,7 @@ export default {
     },
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
+      localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode)); // Save dark mode state
       document.documentElement.classList.toggle('dark', this.isDarkMode);
     },
     saveTodos() {
@@ -51,12 +53,15 @@ export default {
     }
   },
   mounted() {
-    // Ensure todos are loaded from localStorage on app initialization
+    // Ensure todos and dark mode state are loaded from localStorage on app initialization
     this.todos = JSON.parse(localStorage.getItem('todos')) || [];
+    this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
+    document.documentElement.classList.toggle('dark', this.isDarkMode);
   }
 }
 </script>
 
 <style>
-/* Tailwind's dark mode styles will handle the theme. */
+/* Tailwind's dark mode styles are now fully handled by the `dark:` prefix. */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 </style>
