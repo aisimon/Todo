@@ -51,7 +51,7 @@ export default {
     data() {
         return {
             newTodo: '',
-            todos: JSON.parse(localStorage.getItem('todos')) || [], // Load todos from localStorage
+            todos: JSON.parse(localStorage.getItem('todos')) || [],
             showTooltip: false // Control tooltip visibility
         }
     },
@@ -92,10 +92,10 @@ export default {
             this.saveTodos();
         },
         saveTodos() {
-            localStorage.setItem('todos', JSON.stringify(this.todos)); // Save todos to localStorage
+            localStorage.setItem('todos', JSON.stringify(this.todos));
         },
         copyToClipboard() {
-            const markdownList = this.todos.map(todo => `- ${todo.text}`).join('\n');
+            const markdownList = this.todos.map(todo => `- [ ] ${todo.text}`).join('\n');
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(markdownList)
                     .then(() => {
