@@ -17,6 +17,14 @@
                     <button class="std p-2 text-white bg-gray-500 rounded-md flex items-center justify-center" @click="addRandomTodo">
                         <i class="fas fa-bomb"></i>
                     </button>
+                    <div v-if="user" class="flex items-center">
+                        <img :src="user.photoURL" alt="User Avatar" class="w-8 h-8 rounded-md mr-2" width="40" height="40">
+                        <!-- <span class="mr-4">{{ user.displayName }}</span> -->
+                        <button @click="logout" class="std p-2 text-white bg-red-500 rounded-md flex items-center justify-center">Logout</button>
+                    </div>
+                    <div v-else>
+                        <button @click="loginWithGoogle" class="std p-2 text-white bg-blue-500 rounded-md flex items-center justify-center">Login</button>
+                    </div>
                 </div>
                 <!-- Tooltip -->
                 <div v-if="showTooltip" class="absolute top-0 right-0 mt-10 mr-2 p-2 bg-gray-700 text-white text-sm rounded shadow-lg transition-opacity duration-500 z-50">
@@ -57,6 +65,7 @@
 <script>
 import confetti from 'canvas-confetti';
 import { randomInRange } from './utils';
+import { auth, provider, signInWithPopup, signOut } from './firebase';
 
 export default {
     data() {
@@ -64,7 +73,8 @@ export default {
             newTodo: '',
             todos: JSON.parse(localStorage.getItem('todos')) || [],
             showTooltip: false, // Control tooltip visibility
-            isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false // Track dark mode state
+            isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false, // Track dark mode state
+            user: null
         }
     },
     methods: {
@@ -202,11 +212,31 @@ export default {
             this.todos.push({ text: randomTodo, isEditing: false, isDeleting: false });
             this.saveTodos(); // Save the updated todos to localStorage
         },
+        async loginWithGoogle() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                this.user = result.user;
+            } catch (error) {
+                console.error('Error during sign in:', error);
+            }
+        },
+        async logout() {
+            try {
+                await signOut(auth);
+                this.user = null;
+            } catch (error) {
+                console.error('Error during sign out:', error);
+            }
+        }
     },
     mounted() {
         this.todos = JSON.parse(localStorage.getItem('todos')) || [];
         this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
         document.documentElement.classList.toggle('dark', this.isDarkMode); // Apply dark mode on mount
+
+        auth.onAuthStateChanged(user => {
+            this.user = user;
+        });
     }
 }
 </script>
