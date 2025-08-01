@@ -61,7 +61,7 @@
         </div>
         <!-- Footer -->
         <footer v-if="user" class="text-center mt-5 p-3 bg-gray-200 dark:bg-gray-900 dark:text-white">
-            Logged in as: {{ user.email }}
+            Logged in as: {{ maskedEmail }}
         </footer>
     </div>
 </template>
@@ -79,6 +79,17 @@ export default {
             showTooltip: false, // Control tooltip visibility
             isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false, // Track dark mode state
             user: null
+        }
+    },
+    computed: {
+        maskedEmail() {
+            if (this.user && this.user.email) {
+                const email = this.user.email;
+                const firstPart = email.slice(0, 3);
+                const lastPart = email.slice(-4);
+                return `${firstPart}***${lastPart}`;
+            }
+            return '';
         }
     },
     methods: {
