@@ -20,7 +20,7 @@
                     <div v-if="user" class="flex items-center">
                         <img :src="user.photoURL" alt="User Avatar" class="w-8 h-8 rounded-md mr-2" width="40" height="40">
                         <!-- <span class="mr-4">{{ user.displayName }}</span> -->
-                        <button @click="logout" class="std p-2 text-white bg-red-500 rounded-md flex items-center justify-center">Logout</button>
+                        <button @click="logout" class="std p-2 text-white dark:text-black rounded-md flex items-center justify-center">Logout</button>
                     </div>
                     <div v-else>
                         <button @click="loginWithGoogle" class="std p-2 text-white bg-blue-500 rounded-md flex items-center justify-center">Login</button>
@@ -59,6 +59,10 @@
                 </li>
             </ul>
         </div>
+        <!-- Footer -->
+        <footer v-if="user" class="text-center mt-5 p-3 bg-gray-200 dark:bg-gray-900 dark:text-white">
+            Logged in as: {{ user.email }}
+        </footer>
     </div>
 </template>
 
