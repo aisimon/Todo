@@ -3,7 +3,7 @@
         <div class="container mx-auto mt-5 p-1">
             <!-- Header -->
             <div class="flex justify-between items-center mb-3 relative">
-                <h1 class="text-center text-2xl font-bold">Todo</h1>
+                <h1 class="text-center text-2xl font-bold">Task</h1>
                 <div class="flex space-x-9">
                     <!-- Dark Mode Toggle -->
                     <button class="std p-2 text-white bg-gray-500 rounded-md flex items-center justify-center" @click="toggleDarkMode">
