@@ -70,16 +70,28 @@
 <script>
 import confetti from 'canvas-confetti';
 import { randomInRange } from './utils';
-import { auth, provider, signInWithPopup, signOut } from './firebase';
+import { auth, provider, signInWithPopup, signOut, db } from './firebase';
+import { doc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
 
 export default {
     data() {
         return {
             newTodo: '',
-            todos: JSON.parse(localStorage.getItem('todos')) || [],
+            todos: [],
             showTooltip: false, // Control tooltip visibility
             isDarkMode: JSON.parse(localStorage.getItem('isDarkMode')) || false, // Track dark mode state
-            user: null
+            user: null,
+            unsubscribe: null
+        }
+    },
+    watch: {
+        todos: {
+            handler(newTodos) {
+                if (this.user) {
+                    this.updateTodosInFirestore(newTodos);
+                }
+            },
+            deep: true
         }
     },
     computed: {
@@ -103,14 +115,12 @@ export default {
             if (this.newTodo.trim() !== '') {
                 this.todos.push({ text: this.newTodo.trim(), isEditing: false, isDeleting: false });
                 this.newTodo = '';
-                this.saveTodos();
             }
         },
         deleteTodoWithAnimation(index, event) {
             this.todos[index].isDeleting = true; // Trigger the animation
             setTimeout(() => {
                 this.todos.splice(index, 1); // Remove the item after the animation
-                this.saveTodos();
 
                 if (this.todos.length === 0) {
                     this.triggerAllClearedAnimation();
@@ -143,7 +153,7 @@ export default {
                 decay: 0.94,
                 startVelocity: 30,
                 shapes: ["star"],
-                colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+                colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"]
             };
 
             const shooter = {
@@ -152,13 +162,13 @@ export default {
                         ...defaults,
                         particleCount: 40,
                         scalar: 1.2,
-                        shapes: ["star"],
+                        shapes: ["star"]
                     });
                     confetti({
                         ...defaults,
                         particleCount: 10,
                         scalar: 0.75,
-                        shapes: ["circle"],
+                        shapes: ["circle"]
                     });
                 }
             }
@@ -171,10 +181,6 @@ export default {
         },
         saveEdit(index) {
             this.todos[index].isEditing = false;
-            this.saveTodos();
-        },
-        saveTodos() {
-            localStorage.setItem('todos', JSON.stringify(this.todos));
         },
         copyToClipboard() {
             const markdownList = this.todos.map(todo => `- [ ] ${todo.text}`).join('\n');
@@ -226,32 +232,63 @@ export default {
             const randomIndex = Math.floor(Math.random() * randomTodos.length);
             const randomTodo = randomTodos[randomIndex];
             this.todos.push({ text: randomTodo, isEditing: false, isDeleting: false });
-            this.saveTodos(); // Save the updated todos to localStorage
         },
         async loginWithGoogle() {
             try {
                 const result = await signInWithPopup(auth, provider);
                 this.user = result.user;
+                this.setupTodoListener();
             } catch (error) {
                 console.error('Error during sign in:', error);
             }
         },
         async logout() {
             try {
+                if (this.unsubscribe) {
+                    this.unsubscribe();
+                }
                 await signOut(auth);
                 this.user = null;
+                this.todos = [];
             } catch (error) {
                 console.error('Error during sign out:', error);
+            }
+        },
+        async setupTodoListener() {
+            if (this.user) {
+                const userDocRef = doc(db, "users", this.user.uid);
+                this.unsubscribe = onSnapshot(userDocRef, (doc) => {
+                    if (doc.exists()) {
+                        this.todos = doc.data().todos || [];
+                    } else {
+                        // Create the document if it doesn't exist
+                        setDoc(userDocRef, { todos: [] });
+                    }
+                });
+            }
+        },
+        async updateTodosInFirestore(newTodos) {
+            if (this.user) {
+                const userDocRef = doc(db, "users", this.user.uid);
+                await updateDoc(userDocRef, { todos: newTodos });
             }
         }
     },
     mounted() {
-        this.todos = JSON.parse(localStorage.getItem('todos')) || [];
         this.isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
         document.documentElement.classList.toggle('dark', this.isDarkMode); // Apply dark mode on mount
 
         auth.onAuthStateChanged(user => {
-            this.user = user;
+            if (user) {
+                this.user = user;
+                this.setupTodoListener();
+            } else {
+                if (this.unsubscribe) {
+                    this.unsubscribe();
+                }
+                this.user = null;
+                this.todos = [];
+            }
         });
     }
 }
